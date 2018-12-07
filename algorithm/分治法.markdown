@@ -1,0 +1,75 @@
+分治法基本思想：将原问题分解位几个规模较小，但类似于原问题的子问题，递归的求节这些子问题，然后合并这些子问题的节以建立原问题的解。
+
+三个基本步骤：1.分解2.解决3.合并（重组）
+
+实列1.归并排序：
+
+    `merge(A,p,q,r)//A数组首址，pqr是数组下标`
+    `n1=p-q+1`
+    `n2=r-q`
+    `let L[1..n1+1] and R[1...n2+1] be new array`
+    `for i=1 to n2`
+        `L[i]=A[p+i-1]`
+    `for i=1 to n2`
+        `R[j]=A[q+j]`
+    `L[n1+1]=∞  R[n2+1]=∞`
+    `i=j=1`
+    `for k=p to r`
+        `if L[i]<=R[j]`
+           A[k]=L[i],i++
+         else A[k]=R[j],j++
+以上伪码中将数组A均分为2个子数组，在最后一个循环中，比较两个子数组元素大小，按序将元素放入原数组中即可完成排序。
+
+marge-sort将调用上方的子程序排序
+
+    `merge-sort(A,p,r)`//A是数组首地址，p和r是数组下标，当p>=r时说明数组中只有一个元素，已经排好序了
+    `if(p<r)`
+      `q=(p+r)/2`
+       merge-sort(A,p,q)
+       merge-sort(A,q+1,r)
+       merge(A,p,q,r)
+上述伪码的出口时merge函数。时间复杂度为o(nlog(n))
+
+认识分治：当子问题足够小时，称之为基本情况，可以直接求解。若子问题还比较大，则需要进一步分解子问题并递归求节，称为递归情况。
+子问题的性质和原问题一样，所以递归的求节实际上是算法的递归执行。
+分治的基本思想就是递归的求解策略。
+
+问题1.最大子数组问题：已知数组A,在A中寻找和最大的连续非空子数组称为最大子数组。
+
+基本思想：对于当前的数组，使用分治技术，将数组划分为尽量想等大小的两个子数组，而最终要求的最大连续子数组只会有在low-mid之间，mid-high和两部分都有三种情况，而对于第三种情况，我们只需求得左边的最大子数组和右边的最大子数组，两者相加即可得到横跨两边的最大子数组。
+设计伪码如下：
+    `find-max-crossing-subarray(A,low,mid,high)`//求横跨两边的最大子数组      
+    `left-sum=-∞，sum=0,`
+    `for i=mid down to low`
+        `sum=sum+A[i];`
+         `if sum>left-sum`
+             `left-sum=sum;`              
+             ` max-left=i; //记录统计到的下标`
+   `right-sum=-∞，sum=0;`
+   `for j=mid+1 to high` 
+       `sum=A[j+1]+sum`
+        `if sum>right-sum`
+        `right-sum=sum`
+        `max-right=j;//记录下标`
+`return (max-left,max-right,left-sum+right-sum)`
+
+    `find-maximum-subarray(A,low,high)`//分治法求最大子数组
+    `if(high==low)`  return (low,high,A[low])//递归出口，只有一个元素
+    `else mid=(low+high)/2`
+    `left-low,letf-high,left-sum)=find-maximum-subarray(A,low,mid)`//递归入口
+    `right-low,right-high,right-sum)=find-maximum-subarray(A,mid+1,high);`//递归入口
+    `find-max-crossing-subarray(A,low,mid,high);`
+    `比较三者中最大作为返回值返回`
+
+问题2 strassen矩阵乘法：基本思想时将一个n*n的矩阵分解为四个n/2*n/2的矩阵，采用分治法计算，减少了乘法，增加了加法。
+
+问题3 求解递归式：递归式求解的结果是得到形式简单的渐近限界函数
+用带焕发，递归树法和主方法求。
+
+简化处理 1.假定自变量为正整数 2.忽略递归式的边界调件 3.上下取整
+其余的期末复习时候再看看吧.(逃
+
+问题4 最近点对问题：找出平面上n个点中找出距离最近的点。
+分治法得到的复杂度为o(nlog(n));
+
+首先按照x坐标为所有点排序，然后从空间中划分，尽量将分为左右两边个数相等的点空间。则最近点对在左边区域，右边区域或者横跨区域中。具体代码已经实现在课程实验，之后上传到hub。
